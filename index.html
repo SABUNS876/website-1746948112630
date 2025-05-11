@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Online Coding Editor</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fira+Code&display=swap');
+  html, body {
+    margin: 0; 
+    height: 100%;
+    font-family: 'Fira Code', monospace;
+    background-color: #1e1e1e;
+    color: #cccccc;
+    overflow: hidden;
+  }
+  #app {
+    display: flex;
+    height: 100vh;
+    flex-direction: column;
+  }
+  header {
+    background-color: #007acc;
+    color: white;
+    padding: 10px 15px;
+    font-size: 1.4rem;
+    font-weight: bold;
+  }
+  .toolbar {
+    background-color: #252526;
+    padding: 8px 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  select {
+    background-color: #1e1e1e;
+    border: 1px solid #3c3c3c;
+    color: #cccccc;
+    padding: 5px 10px;
+    font-size: 1rem;
+    border-radius: 3px;
+    outline: none;
+    transition: border-color 0.3s ease;
+  }
+  select:focus {
+    border-color: #007acc;
+  }
+  #editor {
+    flex-grow: 1;
+  }
+  /* Responsive for max 600 height and 350 width */
+  @media (max-width: 350px), (max-height: 600px) {
+    header {
+      font-size: 1.2rem;
+      padding: 8px 10px;
+    }
+    .toolbar {
+      padding: 6px 10px;
+      gap: 6px;
+    }
+    select {
+      font-size: 0.9rem;
+      padding: 4px 8px;
+    }
+  }
+</style>
+<!-- Load Monaco Editor from CDN -->
+<script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.41.0/min/vs/loader.js"></script>
+</head>
+<body>
+<div id="app">
+  <header>Online Coding Editor</header>
+  <div class="toolbar">
+    <label for="language-select" style="color:#cccccc;">Language:</label>
+    <select id="language-select" aria-label="Select programming language">
+      <option value="javascript">JavaScript</option>
+      <option value="python">Python</option>
+      <option value="html">HTML</option>
+      <option value="css">CSS</option>
+      <option value="json">JSON</option>
+      <option value="typescript">TypeScript</option>
+      <option value="java">Java</option>
+      <option value="csharp">C#</option>
+      <option value="cpp">C++</option>
+      <option value="php">PHP</option>
+      <option value="ruby">Ruby</option>
+      <option value="go">Go</option>
+      <option value="swift">Swift</option>
+      <option value="shell">Shell Script</option>
+    </select>
+  </div>
+  <div id="editor" role="region" aria-label="Code editor"></div>
+</div>
+
+<script>
+  require.config({ paths: { 'vs': 'https://cdn.jsdelivr.net/npm/monaco-editor@0.41.0/min/vs' }});
+  require(["vs/editor/editor.main"], function() {
+    const editor = monaco.editor.create(document.getElementById('editor'), {
+      value: `// Select a language to start coding!\n`,
+      language: 'javascript',
+      theme: 'vs-dark',
+      fontFamily: "'Fira Code', monospace",
+      fontLigatures: true,
+      automaticLayout: true,
+      minimap: { enabled: false },
+      lineNumbers: 'on',
+      roundedSelection: false,
+      scrollBeyondLastLine: false,
+      readOnly: false,
+      contextmenu: true,
+      tabSize: 2,
+      wordWrap: 'on',
+      renderWhitespace: 'boundary'
+    });
+
+    const languageSelect = document.getElementById('language-select');
+    const snippets = {
+      javascript: `// JavaScript example\nfunction greet(name) {\n  console.log("Hello, " + name + "!");\n}\ngreet("World");`,
+      python: `# Python example\ndef greet(name):\n    print(f"Hello, {name}!")\ngreet("World")`,
+      html: `<!-- HTML example -->\n<!DOCTYPE html>\n<html lang="en">\n<head>\n  <meta charset="UTF-8" />\n  <meta name="viewport" content="width=device-width, initial-scale=1" />\n  <title>Sample HTML</title>\n</head>\n<body>\n  <h1>Hello, World!</h1>\n</body>\n</html>`,
+      css: `/* CSS example */\nbody {\n  font-family: Arial, sans-serif;\n  background-color: #f0f0f0;\n  color: #333;\n}`,
+      json: `{\n  "name": "Example",\n  "type": "JSON snippet",\n  "enabled": true\n}`,
+      typescript: `// TypeScript example\nfunction greet(name: string): void {\n  console.log(\`Hello, \${name}!\`);\n}\ngreet("World");`,
+      java: `// Java example\npublic class Main {\n  public static void main(String[] args) {\n    System.out.println("Hello, World!");\n  }\n}`,
+      csharp: `// C# example\nusing System;\nclass Program {\n  static void Main() {\n    Console.WriteLine("Hello, World!");\n  }\n}`,
+      cpp: `// C++ example\n#include <iostream>\nint main() {\n  std::cout << "Hello, World!" << std::endl;\n  return 0;\n}`,
+      php: `<?php\n// PHP example\necho "Hello, World!";\n?>`,
+      ruby: `# Ruby example\ndef greet(name)\n  puts "Hello, #{name}!"\nend\ngreet("World")`,
+      go: `// Go example\npackage main\nimport "fmt"\nfunc main() {\n  fmt.Println("Hello, World!")\n}`,
+      swift: `// Swift example\nimport Foundation\nprint("Hello, World!")`,
+      shell: `# Shell script example\necho "Hello, World!"`
+    };
+
+    languageSelect.addEventListener('change', e => {
+      const lang = e.target.value;
+      const code = snippets[lang] || '';
+      monaco.editor.setModelLanguage(editor.getModel(), lang);
+      editor.setValue(code);
+    });
+  });
+</script>
+</body>
+</html>
+
+```
